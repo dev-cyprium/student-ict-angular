@@ -83,7 +83,11 @@
 
     <div class="mt-6">
       <div class="my-4">
-        <button class="h-3-5 pt-6px" mat-raised-button>
+        <button
+          class="h-3-5 pt-6px"
+          mat-raised-button
+          (click)="this.loginWithGoogle($event)"
+        >
           <span class="inline-flex items-center">
             <svg
               version="1.1"
