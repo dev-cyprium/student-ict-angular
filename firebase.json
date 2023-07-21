@@ -1,0 +1,9 @@
+{
+  "hosting": [
+    {
+      "target": "booker",
+      "source": ".",
+      "frameworksBackend": {}
+    }
+  ]
+}

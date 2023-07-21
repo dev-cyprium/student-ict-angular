@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "booker-452cf": {
+      "hosting": {
+        "booker": [
+          "booker-452cf"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "booker-452cf"
+  }
+}
