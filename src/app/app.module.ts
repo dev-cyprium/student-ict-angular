@@ -20,6 +20,7 @@ import { HomeComponent } from './home/home.component';
 import { PublicBookListDetailsComponent } from './public/public-book-list-details/public-book-list-details.component';
 import { PublicBookDetailsPageComponent } from './public/public-book-details-page/public-book-details-page.component';
 import { SharedModule } from './shared/shared.module';
+import { BookReviewSummaryComponent } from './public/book-review-summary/book-review-summary.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { SharedModule } from './shared/shared.module';
     HomeComponent,
     PublicBookListDetailsComponent,
     PublicBookDetailsPageComponent,
+    BookReviewSummaryComponent,
   ],
   imports: [
     BrowserModule,

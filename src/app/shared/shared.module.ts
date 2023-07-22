@@ -8,6 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { GsDirective } from '../gs.directive';
 
@@ -24,10 +25,12 @@ import { GsDirective } from '../gs.directive';
     MatSidenavModule,
     MatTableModule,
     MatInputModule,
+    MatCardModule,
     FormsModule,
   ],
   exports: [
     MatListModule,
+    MatCardModule,
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
