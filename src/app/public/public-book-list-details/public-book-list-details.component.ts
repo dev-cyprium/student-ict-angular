@@ -19,6 +19,7 @@ export class PublicBookListDetailsComponent implements OnInit {
     if (!this.book.fileMeta) return;
     const r = ref(this.storage, '/' + this.book.fileMeta?.path);
     getDownloadURL(r).then((url) => {
+      if (this.img()) return;
       this.img.set(url);
     });
   }

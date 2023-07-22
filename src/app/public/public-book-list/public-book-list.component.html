@@ -4,9 +4,25 @@
   >
     <h2 class="text-xl font-bold text-gray-900">Knjige</h2>
 
+    <mat-form-field class="w-full">
+      <mat-label>Pretraga</mat-label>
+      <input
+        [(ngModel)]="searchBook"
+        (ngModelChange)="onSearchBookChange.next($event)"
+        class="w-full"
+        matInput
+        type="text"
+      />
+    </mat-form-field>
+
     <div
       class="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8"
     >
+      <div *ngIf="searchBook.trim().length !== 0 && books.length === 0">
+        <p class="text-xl font-bold text-gray-900">
+          Nema rezultata za pretragu "{{ searchBook }}"
+        </p>
+      </div>
       <app-public-book-list-details *ngFor="let book of books" [book]="book" />
     </div>
   </div>

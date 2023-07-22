@@ -56,7 +56,20 @@ export class BooksService {
     return docRef.id;
   }
 
-  getBooks(): Observable<Book[]> {
+  getBooks(term?: string): Observable<Book[]> {
+    if (term) {
+      return this.books$.pipe(
+        map((books) =>
+          books.filter(
+            (b) =>
+              b.title.toLowerCase().includes(term.toLowerCase()) ||
+              b.author.toLowerCase().includes(term.toLowerCase()) ||
+              b.year === Number(term)
+          )
+        )
+      );
+    }
+
     return this.books$;
   }
 }

@@ -23,9 +23,16 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 import { PublicBookListComponent } from './public/public-book-list/public-book-list.component';
 import { HomeComponent } from './home/home.component';
 import { PublicBookListDetailsComponent } from './public/public-book-list-details/public-book-list-details.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, PublicBookListComponent, HomeComponent, PublicBookListDetailsComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    PublicBookListComponent,
+    HomeComponent,
+    PublicBookListDetailsComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -35,6 +42,7 @@ import { PublicBookListDetailsComponent } from './public/public-book-list-detail
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    FormsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),
