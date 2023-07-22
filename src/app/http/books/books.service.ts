@@ -41,14 +41,12 @@ export class BooksService {
     const r = ref(this.storage, path);
     const d = doc(this.firestore, 'books', bookID);
 
-    console.log('uploading to: ', path);
     uploadBytesResumable(r, book.fileMeta.file).on(
       'state_changed',
-      (status) => {
-        console.log(status);
-        if (status.state === 'success') {
-          updateDoc(d, { path });
-        }
+      undefined,
+      undefined,
+      () => {
+        updateDoc(d, { path });
       }
     );
   }

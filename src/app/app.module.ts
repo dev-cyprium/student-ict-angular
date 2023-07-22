@@ -20,9 +20,12 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { LoginComponent } from './login/login.component';
 import { getStorage, provideStorage } from '@angular/fire/storage';
+import { PublicBookListComponent } from './public/public-book-list/public-book-list.component';
+import { HomeComponent } from './home/home.component';
+import { PublicBookListDetailsComponent } from './public/public-book-list-details/public-book-list-details.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent, PublicBookListComponent, HomeComponent, PublicBookListDetailsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
