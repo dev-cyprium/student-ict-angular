@@ -19,7 +19,7 @@ export class BooksTableComponent implements OnDestroy {
     });
   }
 
-  deleteBook(id: string): void {
+  deleteBook(_id: string): void {
     // this.booksService.deleteBook(id);
   }
 

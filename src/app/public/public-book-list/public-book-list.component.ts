@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { Book } from 'src/app/admin-dashboard/books/book-type';
@@ -13,7 +13,7 @@ export class PublicBookListComponent implements OnDestroy {
   books: Book[] = [];
   subscription!: Subscription;
 
-  searchBook: string = '';
+  searchBook = '';
   onSearchBookChange: Subject<string> = new Subject<string>();
   searchSubscription: Subscription;
 

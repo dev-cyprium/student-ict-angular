@@ -1,20 +1,11 @@
-import {
-  Directive,
-  ElementRef,
-  Input,
-  Renderer2,
-  inject,
-  signal,
-} from '@angular/core';
-import { Storage, getDownloadURL, ref } from '@angular/fire/storage';
+import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 import { FileMeta } from './admin-dashboard/books/book-type';
 import { StorageService } from './shared/storage.service';
 
 @Directive({
   selector: '[appGs]',
 })
-export class GsDirective {
-  storage = inject(Storage);
+export class GsDirective implements OnInit {
   @Input() appGs?: FileMeta | null;
   constructor(
     private elementRef: ElementRef,

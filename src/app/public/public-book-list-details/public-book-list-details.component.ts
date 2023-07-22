@@ -8,6 +8,4 @@ import { Book } from 'src/app/admin-dashboard/books/book-type';
 })
 export class PublicBookListDetailsComponent {
   @Input() book!: Book;
-
-  constructor() {}
 }
