@@ -1,0 +1,31 @@
+<mat-drawer-container class="example-container">
+  <mat-drawer class="w-64" mode="side" opened>
+    <mat-nav-list>
+      <a
+        mat-list-item
+        *ngFor="let link of links"
+        [routerLink]="link.route"
+        [activated]="link.isActive"
+      >
+        {{ link.name }}
+      </a>
+      <!--
+      <a
+        class="text-red-500"
+        mat-list-item
+        routerLinkActive="text-red-500"
+        routerLink="/admin"
+        >Widžeti</a
+      >
+      <a mat-list-item routerLinkActive="text-red-500" routerLink="/admin/books"
+        >Knjige</a
+      >
+      <a mat-list-item routerLinkActive="text-red-500" routerLink="/admin/users"
+        >Administratori</a
+      > -->
+    </mat-nav-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <ng-content />
+  </mat-drawer-content>
+</mat-drawer-container>

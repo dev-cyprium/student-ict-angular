@@ -1,0 +1,34 @@
+<table mat-table [dataSource]="books" class="mat-elevation-z8 w-full">
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef>Naslov</th>
+    <td mat-cell *matCellDef="let book">{{ book.title }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="author">
+    <th mat-header-cell *matHeaderCellDef>Autor</th>
+    <td mat-cell *matCellDef="let book">{{ book.author }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="year">
+    <th mat-header-cell *matHeaderCellDef>Godina izdanja</th>
+    <td mat-cell *matCellDef="let book">{{ book.year }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Akcije</th>
+    <td mat-cell *matCellDef="let book">
+      <a class="text-purple-500" [routerLink]="['/admin/books', book.id]"
+        >Pregled</a
+      >
+      <a
+        class="text-purple-500"
+        [routerLink]="['/admin/books', book.id, 'edit']"
+        >Izmena</a
+      >
+      <a class="text-purple-500" (click)="deleteBook(book.id)">Brisanje</a>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
