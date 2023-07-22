@@ -52,6 +52,7 @@ export class FirestoreBook {
       this.year,
       this.pages,
       this.genre,
+      undefined,
       this.id
     );
 

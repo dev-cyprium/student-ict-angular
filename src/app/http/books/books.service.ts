@@ -23,7 +23,7 @@ export class BooksService {
 
   constructor() {
     this.bookCollection = collection(this.firestore, 'books');
-    const b$ = collectionData(this.bookCollection);
+    const b$ = collectionData(this.bookCollection, { idField: 'id' });
 
     this.books$ = b$.pipe(
       map((fBooks) =>
@@ -54,6 +54,10 @@ export class BooksService {
   async createNewBook(book: FirestoreBook): Promise<string> {
     const docRef = await addDoc(this.bookCollection, book.serialize());
     return docRef.id;
+  }
+
+  getBook(id: string): Observable<Book | undefined> {
+    return this.books$.pipe(map((books) => books.find((b) => b.id === id)));
   }
 
   getBooks(term?: string): Observable<Book[]> {

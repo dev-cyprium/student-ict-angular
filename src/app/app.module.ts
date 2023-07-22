@@ -1,13 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import {
@@ -23,7 +18,8 @@ import { getStorage, provideStorage } from '@angular/fire/storage';
 import { PublicBookListComponent } from './public/public-book-list/public-book-list.component';
 import { HomeComponent } from './home/home.component';
 import { PublicBookListDetailsComponent } from './public/public-book-list-details/public-book-list-details.component';
-import { FormsModule } from '@angular/forms';
+import { PublicBookDetailsPageComponent } from './public/public-book-details-page/public-book-details-page.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -32,17 +28,13 @@ import { FormsModule } from '@angular/forms';
     PublicBookListComponent,
     HomeComponent,
     PublicBookListDetailsComponent,
+    PublicBookDetailsPageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
+    SharedModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),
     provideAuth(() => getAuth()),

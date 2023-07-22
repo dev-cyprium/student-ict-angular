@@ -2,7 +2,7 @@
   <div class="relative">
     <div class="relative h-72 w-full overflow-hidden rounded-lg">
       <img
-        [src]="img()"
+        [appGs]="book.fileMeta"
         [alt]="book.title"
         class="h-full w-full object-cover object-center"
       />
@@ -23,9 +23,9 @@
   </div>
   <div class="mt-6">
     <a
-      href="#"
+      [routerLink]="['/book', book.id]"
       class="relative flex items-center justify-center rounded-md border border-transparent bg-gray-100 px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200"
-      >Add to bag<span class="sr-only">, Zip Tote Basket</span></a
+      >Pogledaj detalje</a
     >
   </div>
 </div>
