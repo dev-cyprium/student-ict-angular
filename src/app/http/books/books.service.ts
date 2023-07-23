@@ -1,16 +1,29 @@
 import { Injectable, inject } from '@angular/core';
 import {
-  CollectionReference,
+  DocumentData,
   Firestore,
   addDoc,
   collection,
   collectionData,
   doc,
+  docData,
+  limit,
+  query,
   updateDoc,
+  where,
 } from '@angular/fire/firestore';
 import { Storage, ref, uploadBytesResumable } from '@angular/fire/storage';
-import { Observable, map } from 'rxjs';
-import { Book, FirestoreBook } from 'src/app/admin-dashboard/books/book-type';
+import {
+  Observable,
+  catchError,
+  combineLatest,
+  map,
+  of,
+  shareReplay,
+} from 'rxjs';
+import { Book } from 'src/app/admin-dashboard/books/book-type';
+
+const COLLECTION_PATH = 'books';
 
 @Injectable({
   providedIn: 'root',
@@ -18,19 +31,6 @@ import { Book, FirestoreBook } from 'src/app/admin-dashboard/books/book-type';
 export class BooksService {
   firestore = inject(Firestore);
   storage = inject(Storage);
-  bookCollection: CollectionReference;
-  books$: Observable<Book[]>;
-
-  constructor() {
-    this.bookCollection = collection(this.firestore, 'books');
-    const b$ = collectionData(this.bookCollection, { idField: 'id' });
-
-    this.books$ = b$.pipe(
-      map((fBooks) =>
-        fBooks.map((b) => FirestoreBook.fromDocumentData(b).toBook())
-      )
-    );
-  }
 
   handleFileUpload(bookID: string, book: Book): void {
     if (!book.fileMeta?.file) {
@@ -39,7 +39,7 @@ export class BooksService {
 
     const path = `books/${bookID}/${book.fileMeta.file.name}`;
     const r = ref(this.storage, path);
-    const d = doc(this.firestore, 'books', bookID);
+    const d = doc(this.firestore, COLLECTION_PATH, bookID);
 
     uploadBytesResumable(r, book.fileMeta.file).on(
       'state_changed',
@@ -51,29 +51,74 @@ export class BooksService {
     );
   }
 
-  async createNewBook(book: FirestoreBook): Promise<string> {
-    const docRef = await addDoc(this.bookCollection, book.serialize());
+  async createNewBook(book: Book): Promise<string> {
+    const bookCollection = collection(this.firestore, COLLECTION_PATH);
+    const docRef = await addDoc(bookCollection, book.toDocumentData());
+    book.id = docRef.id;
     return docRef.id;
   }
 
   getBook(id: string): Observable<Book | undefined> {
-    return this.books$.pipe(map((books) => books.find((b) => b.id === id)));
+    const bookDoc = doc(this.firestore, COLLECTION_PATH, id);
+    return docData(bookDoc).pipe(
+      map((fBook) => (fBook ? Book.fromDocumentData(fBook) : undefined)),
+      shareReplay(1)
+    );
   }
 
   getBooks(term?: string): Observable<Book[]> {
-    if (term) {
-      return this.books$.pipe(
-        map((books) =>
-          books.filter(
-            (b) =>
-              b.title.toLowerCase().includes(term.toLowerCase()) ||
-              b.author.toLowerCase().includes(term.toLowerCase()) ||
-              b.year === Number(term)
-          )
-        )
-      );
-    }
+    if (!term) return this.getAllBooks();
 
-    return this.books$;
+    const bookCollection = collection(this.firestore, COLLECTION_PATH);
+    const titleQuery = query(
+      bookCollection,
+      where('title', 'array-contains', term),
+      limit(10)
+    );
+    const authorQuery = query(
+      bookCollection,
+      where('author', 'array-contains', term),
+      limit(10)
+    );
+    const yearQuery = query(
+      bookCollection,
+      where('year', '==', Number(term)),
+      limit(10)
+    );
+
+    const queries$ = [titleQuery, authorQuery, yearQuery].map((q) =>
+      collectionData(q, { idField: 'id' }).pipe(
+        catchError((error) => {
+          console.error(error);
+          return of([]);
+        })
+      )
+    );
+
+    return combineLatest(queries$).pipe(
+      map((booksArrays) => {
+        const mergedBooks = ([] as DocumentData[]).concat(...booksArrays);
+        return this.removeDuplicates(
+          mergedBooks.map((fBook) => Book.fromDocumentData(fBook))
+        );
+      }),
+      shareReplay(1)
+    );
+  }
+
+  private getAllBooks(): Observable<Book[]> {
+    const bookCollection = collection(this.firestore, COLLECTION_PATH);
+    const bookQuery = query(bookCollection, limit(10));
+
+    return collectionData(bookQuery, { idField: 'id' }).pipe(
+      map((books) => books.map((fBook) => Book.fromDocumentData(fBook))),
+      shareReplay(1)
+    );
+  }
+
+  private removeDuplicates(books: Book[]): Book[] {
+    return books.filter(
+      (book, index, self) => index === self.findIndex((b) => b.id === book.id)
+    );
   }
 }

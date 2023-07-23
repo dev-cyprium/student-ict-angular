@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./books-form.component.css'],
 })
 export class BooksFormComponent {
-  book: Book = new Book('Moja knjiga', 'Ja', 2021, 100, 'Drama', 'a-12344');
+  book: Book = new Book('', '', 0, 0, '');
   submited = false;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
@@ -24,12 +24,7 @@ export class BooksFormComponent {
 
   async onSubmit(): Promise<void> {
     this.submited = true;
-    // TODO: reference is lost here so we have to keep bookID
-    // refactor it to keep reference to book, and refactor out
-    // the 2 separate book classes in a more inteligent way
-    const bookID = await this.bookService.createNewBook(
-      this.book.toFirestoreBook()
-    );
+    const bookID = await this.bookService.createNewBook(this.book);
     this.bookService.handleFileUpload(bookID, this.book);
     this.router.navigate(['/admin/books']);
   }
