@@ -9,7 +9,6 @@ export class StorageService {
   private cache: { [path: string]: Observable<string> } = {};
 
   getDownloadUrl(path: string): Observable<string> {
-    console.log(this.cache);
     // If the URL exists in the cache, return it
     if (this.cache[path]) {
       return this.cache[path];

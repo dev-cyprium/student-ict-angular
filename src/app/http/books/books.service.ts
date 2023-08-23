@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import {
+  CollectionReference,
   DocumentData,
   Firestore,
   addDoc,
@@ -10,17 +11,9 @@ import {
   limit,
   query,
   updateDoc,
-  where,
 } from '@angular/fire/firestore';
 import { Storage, ref, uploadBytesResumable } from '@angular/fire/storage';
-import {
-  Observable,
-  catchError,
-  combineLatest,
-  map,
-  of,
-  shareReplay,
-} from 'rxjs';
+import { Observable, map, shareReplay } from 'rxjs';
 import { Book } from 'src/app/admin-dashboard/books/book-type';
 
 const COLLECTION_PATH = 'books';
@@ -31,6 +24,7 @@ const COLLECTION_PATH = 'books';
 export class BooksService {
   firestore = inject(Firestore);
   storage = inject(Storage);
+  private cachedBooks: CollectionReference<DocumentData> | null = null;
 
   handleFileUpload(bookID: string, book: Book): void {
     if (!book.fileMeta?.file) {
@@ -67,48 +61,26 @@ export class BooksService {
   }
 
   getBooks(term?: string): Observable<Book[]> {
-    if (!term) return this.getAllBooks();
+    if (!term || term.trim().length === 0) return this.getAllBooks();
 
-    const bookCollection = collection(this.firestore, COLLECTION_PATH);
-    const titleQuery = query(
-      bookCollection,
-      where('title', 'array-contains', term),
-      limit(10)
-    );
-    const authorQuery = query(
-      bookCollection,
-      where('author', 'array-contains', term),
-      limit(10)
-    );
-    const yearQuery = query(
-      bookCollection,
-      where('year', '==', Number(term)),
-      limit(10)
-    );
-
-    const queries$ = [titleQuery, authorQuery, yearQuery].map((q) =>
-      collectionData(q, { idField: 'id' }).pipe(
-        catchError((error) => {
-          console.error(error);
-          return of([]);
-        })
+    return this.getAllBooks(false, true).pipe(
+      map((books) =>
+        books.filter(
+          (book) =>
+            book.title.toLowerCase().includes(term.toLowerCase()) ||
+            book.author.toLowerCase().includes(term.toLowerCase()) ||
+            book.genre.toLowerCase().includes(term.toLowerCase()) ||
+            book.year.toString().includes(term.toLowerCase())
+        )
       )
-    );
-
-    return combineLatest(queries$).pipe(
-      map((booksArrays) => {
-        const mergedBooks = ([] as DocumentData[]).concat(...booksArrays);
-        return this.removeDuplicates(
-          mergedBooks.map((fBook) => Book.fromDocumentData(fBook))
-        );
-      }),
-      shareReplay(1)
     );
   }
 
-  private getAllBooks(): Observable<Book[]> {
-    const bookCollection = collection(this.firestore, COLLECTION_PATH);
-    const bookQuery = query(bookCollection, limit(10));
+  private getAllBooks(rateLimit = true, cache = false): Observable<Book[]> {
+    const bookCollection = this.cachedFetch(cache);
+    const bookQuery = rateLimit
+      ? query(bookCollection, limit(10))
+      : bookCollection;
 
     return collectionData(bookQuery, { idField: 'id' }).pipe(
       map((books) => books.map((fBook) => Book.fromDocumentData(fBook))),
@@ -116,9 +88,15 @@ export class BooksService {
     );
   }
 
-  private removeDuplicates(books: Book[]): Book[] {
-    return books.filter(
-      (book, index, self) => index === self.findIndex((b) => b.id === book.id)
-    );
+  private cachedFetch(cache: boolean): CollectionReference<DocumentData> {
+    if (!cache) {
+      return collection(this.firestore, COLLECTION_PATH);
+    }
+
+    if (!this.cachedBooks) {
+      this.cachedBooks = collection(this.firestore, COLLECTION_PATH);
+    }
+
+    return this.cachedBooks;
   }
 }
