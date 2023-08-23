@@ -12,6 +12,15 @@
               [alt]="book.title"
               class="h-full w-full object-cover object-center rounded-lg"
             />
+            <div class="w-full flex justify-center p-4">
+              <button
+                type="button"
+                (click)="handleCreateReview()"
+                mat-raised-button
+              >
+                Ostavi recenziju
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -32,7 +41,11 @@
 
       <div class="grid grid-cols-2 gap-4">
         <app-book-review-summary [likes]="35" />
-        <app-book-review-summary />
+      </div>
+
+      <div class="mt-6">
+        <h2>Recenzije</h2>
+        <app-public-reviews />
       </div>
     </div>
   </div>

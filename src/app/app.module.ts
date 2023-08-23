@@ -21,6 +21,9 @@ import { PublicBookListDetailsComponent } from './public/public-book-list-detail
 import { PublicBookDetailsPageComponent } from './public/public-book-details-page/public-book-details-page.component';
 import { SharedModule } from './shared/shared.module';
 import { BookReviewSummaryComponent } from './public/book-review-summary/book-review-summary.component';
+import { PublicReviewsComponent } from './public-reviews/public-reviews.component';
+import { CreatePublicReviewDialogComponent } from './public-reviews/create-public-review-dialog/create-public-review-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -31,11 +34,15 @@ import { BookReviewSummaryComponent } from './public/book-review-summary/book-re
     PublicBookListDetailsComponent,
     PublicBookDetailsPageComponent,
     BookReviewSummaryComponent,
+    PublicReviewsComponent,
+    CreatePublicReviewDialogComponent,
+    CreatePublicReviewDialogComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     SharedModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAnalytics(() => getAnalytics()),

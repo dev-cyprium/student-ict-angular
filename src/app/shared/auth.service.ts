@@ -22,7 +22,6 @@ export class AuthService implements OnDestroy {
 
   constructor() {
     this.subscription = this.authState.subscribe((user) => {
-      console.log('user', user);
       this.user = user;
     });
   }
@@ -33,6 +32,10 @@ export class AuthService implements OnDestroy {
         this.router.navigate(['/']);
       }
     });
+  }
+
+  isUserLoggedIn(): boolean {
+    return this.user !== null;
   }
 
   ngOnDestroy(): void {
