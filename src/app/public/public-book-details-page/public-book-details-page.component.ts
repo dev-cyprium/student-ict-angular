@@ -43,6 +43,7 @@ export class PublicBookDetailsPageComponent implements OnInit, OnDestroy {
 
     this.dialog.open(CreatePublicReviewDialogComponent, {
       width: '500px',
+      data: { bookId: this.book?.id },
     });
   }
 

@@ -54,7 +54,7 @@ export class BooksService {
 
   getBook(id: string): Observable<Book | undefined> {
     const bookDoc = doc(this.firestore, COLLECTION_PATH, id);
-    return docData(bookDoc).pipe(
+    return docData(bookDoc, { idField: 'id' }).pipe(
       map((fBook) => (fBook ? Book.fromDocumentData(fBook) : undefined)),
       shareReplay(1)
     );
